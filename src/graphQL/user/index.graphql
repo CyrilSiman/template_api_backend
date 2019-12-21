@@ -1,0 +1,36 @@
+"User"
+type User {
+    "UUID"
+    _id:String
+    "User firstname"
+    firstName:String
+    "User lastname"
+    lastName:String
+    "User email used as login"
+    email:String
+}
+
+type LoginAnswer {
+    "True if user is authenticated false otherwise "
+    authenticated:Boolean
+    "Try left before user will be blocked"
+    tryLeft:Int
+    "How many time user need to wait before next authentication try"
+    retryAfter:Int
+}
+
+extend type Query {
+    "Return all users"
+    users: [User]
+    "Return user connected information's"
+    me: User
+}
+
+extend type Mutation {
+    "Login"
+    login(email:String!,password:String!): LoginAnswer
+    "Logout"
+    logout : Boolean
+    "Send reset Password Link"
+    sendResetPasswordLink(email:String!): String
+}

@@ -1,0 +1,9 @@
+extend type Query {
+    "Return true if app is configured"
+    appConfigured: Boolean
+}
+
+extend type Mutation {
+    "Create root User"
+    createRootUser(secret:String!, email:String!,password:String!): Boolean
+}
