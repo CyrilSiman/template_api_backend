@@ -53,6 +53,16 @@ const login = async (email,password,context) => {
 
             result.authenticated = true
         } else {
+            //Clean previous cookie
+            context.res.cookie(constants.COOKIE_NAME,'',{
+                domain:'api.myapp.lc',
+                httpOnly: true,
+                sameSite: true,
+                signed: true,
+                secure: true,
+                maxAge: new Date(0)
+            })
+
             try {
                 rlResUsername = await limiterConsecutiveFailsByUsername.consume(email)
 

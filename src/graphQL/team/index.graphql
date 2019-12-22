@@ -1,0 +1,16 @@
+"Team"
+type Team {
+    "UUID"
+    _id:String
+    "Team's name"
+    name:String
+    "Team's creation date"
+    createdAt:String
+    "Last Team's update date"
+    updatedAt:String
+}
+
+extend type Query {
+    "Return all teams"
+    teams: [Team]
+}

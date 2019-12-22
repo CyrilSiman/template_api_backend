@@ -1,5 +1,6 @@
 import appConfig from './appConfig/index.graphql'
-import user from './user/index.graphql'
+import user from './users/index.graphql'
+import team from './team/index.graphql'
 import { gql } from 'apollo-server'
 
 const root = gql`    
@@ -11,6 +12,6 @@ const root = gql`
     }
 `
 
-const schemaArray = [root,appConfig,user]
+const schemaArray = [root,appConfig,user,team]
 
 export default schemaArray

@@ -1,6 +1,7 @@
 import User from 'ROOT/model/users'
 import UserService from 'ROOT/services/UserService'
 import logger from 'ROOT/services/logger'
+import {AuthenticationError} from 'apollo-server'
 
 const resolvers = {
     Query: {
@@ -12,7 +13,7 @@ const resolvers = {
         },
         users: async (parent,args,context) => {
             if (!context.user) {
-                return null
+                throw new AuthenticationError('Not authenticated')
             }
             return await User.find().lean()
         },
