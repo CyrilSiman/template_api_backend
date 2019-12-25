@@ -14,3 +14,8 @@ extend type Query {
     "Return all teams"
     teams: [Team]
 }
+
+extend type Mutation {
+    "Create team"
+    createTeam(name:String!): Team
+}

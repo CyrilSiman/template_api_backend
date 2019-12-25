@@ -1,7 +1,13 @@
 import mongoose from 'mongoose'
 
 var teamSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type:String,
+        unique : true,
+        required : true,
+        lowercase: true,
+        trim: true
+    },
 },{
     collection:'teams',
     timestamps:true

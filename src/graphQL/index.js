@@ -3,6 +3,7 @@ import user from './users/index.graphql'
 import team from './team/index.graphql'
 import { gql } from 'apollo-server'
 
+
 const root = gql`    
     type Query {
         root: String
