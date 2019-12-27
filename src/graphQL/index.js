@@ -11,6 +11,7 @@ const root = gql`
     type Mutation {
         root: String
     }
+    scalar Date
 `
 
 const schemaArray = [root,appConfig,user,team]

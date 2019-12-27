@@ -5,9 +5,9 @@ type Team {
     "Team's name"
     name:String
     "Team's creation date"
-    createdAt:String
+    createdAt:Date
     "Last Team's update date"
-    updatedAt:String
+    updatedAt:Date
 }
 
 extend type Query {
