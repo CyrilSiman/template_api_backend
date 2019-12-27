@@ -5,6 +5,7 @@ import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import { Strategy } from 'passport-jwt'
+import depthLimit from 'graphql-depth-limit'
 
 import {checkIfAppIsConfigured} from 'ROOT/services/AppConfigureService'
 
@@ -87,6 +88,7 @@ const runServer = async () => {
         typeDefs,
         resolvers,
         debug: false,
+        validationRules: [ depthLimit(10) ],
         context: ({ req,res}) => {
             return {
                 res,
