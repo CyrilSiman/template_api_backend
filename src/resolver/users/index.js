@@ -9,7 +9,7 @@ const resolvers = {
             if (context.user) {
                 return context.user
             }
-            return new Error('Authentication failed')
+            throw new AuthenticationError('Not authenticated')
         },
         users: async (parent,args,context) => {
             if (!context.user) {
