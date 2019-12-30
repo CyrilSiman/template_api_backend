@@ -47,7 +47,8 @@ const login = async (email,password,context) => {
                 httpOnly: true,
                 sameSite: true,
                 signed: true,
-                secure: true
+                secure: true,
+                maxAge: new Date((new Date()).getTime() + process.env.SESSION_DURATION*60000)
             })
             await limiterConsecutiveFailsByUsername.delete(email)
 
