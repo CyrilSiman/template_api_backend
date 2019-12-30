@@ -21,3 +21,17 @@ export const setCookieOrUpdate = (res,token) => {
         maxAge: parseInt(process.env.SESSION_DURATION)*60*1000
     })
 }
+
+/**
+ * Clear session cookie
+ * @param res
+ */
+export const clearCookie = (res) => {
+    res.clearCookie(constants.COOKIE_NAME, {
+        domain:process.env.COOKIE_DOMAIN_NAME,
+        httpOnly: true,
+        sameSite: true,
+        signed: true,
+        secure: true,
+    })
+}

@@ -1,7 +1,7 @@
 import User from 'ROOT/model/users'
 import jwt from 'jsonwebtoken'
 import constants from 'ROOT/constants'
-import { generateRandomString, setCookieOrUpdate } from '../utils'
+import { clearCookie, generateRandomString, setCookieOrUpdate } from '../utils'
 import logger from 'ROOT/services/logger'
 import bcrypt from 'bcrypt'
 import { RateLimiterMemory } from 'rate-limiter-flexible'
@@ -49,13 +49,7 @@ const login = async (email,password,context) => {
             result.authenticated = true
         } else {
             //Clean previous cookie
-            context.res.clearCookie(constants.COOKIE_NAME,{
-                domain:process.env.COOKIE_DOMAIN_NAME,
-                httpOnly: true,
-                sameSite: true,
-                signed: true,
-                secure: true,
-            })
+            clearCookie(context.res)
 
             try {
                 rlResUsername = await limiterConsecutiveFailsByUsername.consume(email)
