@@ -14,6 +14,7 @@ import resolvers from './resolver'
 import typeDefs from './graphQL'
 import mongoose from 'mongoose'
 import Users from 'ROOT/model/users'
+import { setCookieOrUpdate } from 'ROOT/services/utils'
 
 const { DISABLE_CORS,
     MONGOOSE_HOST,
@@ -77,12 +78,13 @@ const runServer = async () => {
     app.use('/graphql', (req, res, next) => {
         passport.authenticate('jwt', { session: false }, (err, user) => {
             if (user) {
+                //Extend cookie sessions
+                setCookieOrUpdate(res,req.signedCookies[COOKIE_NAME])
                 req.user = user
             }
             next()
         })(req, res, next)
     })
-
 
     const apolloServer = new ApolloServer({
         typeDefs,

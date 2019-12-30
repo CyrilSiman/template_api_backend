@@ -1,7 +1,7 @@
 import User from 'ROOT/model/users'
 import jwt from 'jsonwebtoken'
 import constants from 'ROOT/constants'
-import {generateRandomString} from '../utils'
+import { generateRandomString, setCookieOrUpdate } from '../utils'
 import logger from 'ROOT/services/logger'
 import bcrypt from 'bcrypt'
 import { RateLimiterMemory } from 'rate-limiter-flexible'
@@ -42,26 +42,19 @@ const login = async (email,password,context) => {
     } else {
         if(user && await bcrypt.compare(password,user.password)) {
             const token = jwt.sign({_id:user._id}, process.env.JWT_SECRET)
-            context.res.cookie(constants.COOKIE_NAME, token, {
-                domain:'api.myapp.lc',
-                httpOnly: true,
-                sameSite: true,
-                signed: true,
-                secure: true,
-                maxAge: new Date((new Date()).getTime() + process.env.SESSION_DURATION*60000)
-            })
+            setCookieOrUpdate(context.res,token)
+            //Reset consecutive fails
             await limiterConsecutiveFailsByUsername.delete(email)
 
             result.authenticated = true
         } else {
             //Clean previous cookie
-            context.res.cookie(constants.COOKIE_NAME,'',{
-                domain:'api.myapp.lc',
+            context.res.clearCookie(constants.COOKIE_NAME,{
+                domain:process.env.COOKIE_DOMAIN_NAME,
                 httpOnly: true,
                 sameSite: true,
                 signed: true,
                 secure: true,
-                maxAge: new Date(0)
             })
 
             try {
