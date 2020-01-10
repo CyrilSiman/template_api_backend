@@ -42,8 +42,13 @@ const resolvers = {
                 throw new AuthenticationError('Not authenticated')
             }
             return await UserService.updateProfile(context.user,args.lastName,args.firstName,args.email)
+        },
+        updateMyPassword: async (parent,args, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('Not authenticated')
+            }
+            return await UserService.updateMyPassword(context.user,args.oldPassword,args.newPassword)
         }
-
     }
 }
 

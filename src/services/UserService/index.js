@@ -5,6 +5,7 @@ import { clearCookie, generateRandomString, setCookieOrUpdate } from '../utils'
 import logger from 'ROOT/services/logger'
 import bcrypt from 'bcrypt'
 import { RateLimiterMemory } from 'rate-limiter-flexible'
+import { ApolloError } from 'apollo-server'
 
 const maxConsecutiveFailsByUsername = process.env.MAX_CONSECUTIVE_FAILES_BY_EMAIL
 
@@ -15,8 +16,8 @@ const limiterConsecutiveFailsByUsername = new RateLimiterMemory({
 })
 
 const logout = async (context) => {
-    context.res.cookie(constants.COOKIE_NAME,'',{
-        domain:'api.myapp.lc',
+    context.res.cookie(constants.COOKIE_NAME, '', {
+        domain: 'api.myapp.lc',
         httpOnly: true,
         sameSite: true,
         signed: true,
@@ -26,23 +27,23 @@ const logout = async (context) => {
     return true
 }
 
-const login = async (email,password,context) => {
+const login = async (email, password, context) => {
 
-    let user = await User.findOne({email:email})
+    let user = await User.findOne({ email: email })
     let rlResUsername = await limiterConsecutiveFailsByUsername.get(email)
 
     const result = {
-        authenticated:false,
-        tryLeft:0,
-        retryAfter:0,
+        authenticated: false,
+        tryLeft: 0,
+        retryAfter: 0,
     }
 
     if (rlResUsername !== null && rlResUsername.consumedPoints > maxConsecutiveFailsByUsername) {
         result.retryAfter = Math.round(rlResUsername.msBeforeNext / 1000) || 1
     } else {
-        if(user && await bcrypt.compare(password,user.password)) {
-            const token = jwt.sign({_id:user._id}, process.env.JWT_SECRET)
-            setCookieOrUpdate(context.res,token)
+        if (user && await bcrypt.compare(password, user.password)) {
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
+            setCookieOrUpdate(context.res, token)
             //Reset consecutive fails
             await limiterConsecutiveFailsByUsername.delete(email)
 
@@ -70,8 +71,8 @@ const login = async (email,password,context) => {
 
 const sendResetPasswordLink = async (email) => {
     try {
-        let user = await User.findOne({email})
-        if(user) {
+        let user = await User.findOne({ email })
+        if (user) {
             user.resetPasswordToken = generateRandomString()
             await user.save()
         }
@@ -90,10 +91,10 @@ const sendResetPasswordLink = async (email) => {
  * @param email
  * @returns {Promise<null|*>}
  */
-const updateProfile = async (user, lastName,firstName,email) => {
+const updateProfile = async (user, lastName, firstName, email) => {
     try {
-        let userUpdate = await User.findOne({_id:user._id})
-        if(userUpdate) {
+        let userUpdate = await User.findOne({ _id: user._id })
+        if (userUpdate) {
             userUpdate.lastName = lastName
             userUpdate.firstName = firstName
             userUpdate.email = email
@@ -106,9 +107,29 @@ const updateProfile = async (user, lastName,firstName,email) => {
     return null
 }
 
+/**
+ * Update password of connected user
+ * @param user
+ * @param oldPassword
+ * @param newPassword
+ * @returns {null|*}
+ */
+const updateMyPassword = async (user, oldPassword, newPassword) => {
+    let userUpdate = await User.findOne({ _id: user._id })
+    if (userUpdate && await bcrypt.compare(oldPassword, userUpdate.password)) {
+        userUpdate.password = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT_ROUNDS))
+        userUpdate.save()
+        return true
+    } else {
+        throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_PASSWORD_DONT_MATCH)
+    }
+}
+
 export default {
     login,
     logout,
     sendResetPasswordLink,
-    updateProfile
+    updateProfile,
+    updateMyPassword
+
 }

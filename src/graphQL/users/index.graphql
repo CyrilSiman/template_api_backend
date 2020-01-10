@@ -35,4 +35,6 @@ extend type Mutation {
     sendResetPasswordLink(email:String!): String
     "Update connected user profile"
     updateMyProfile(lastName:String!,firstName:String!,email:String!): User
+    "Update connected user password"
+    updateMyPassword(oldPassword:String!,newPassword:String!): Boolean
 }
