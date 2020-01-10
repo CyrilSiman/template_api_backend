@@ -33,4 +33,6 @@ extend type Mutation {
     logout : Boolean
     "Send reset Password Link"
     sendResetPasswordLink(email:String!): String
+    "Update connected user profile"
+    updateMyProfile(lastName:String!,firstName:String!,email:String!): User
 }

@@ -36,7 +36,14 @@ const resolvers = {
         },
         sendResetPasswordLink : async (parent, args) => {
             return await UserService.sendResetPasswordLink(args.email)
+        },
+        updateMyProfile : async (parent,args, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('Not authenticated')
+            }
+            return await UserService.updateProfile(context.user,args.lastName,args.firstName,args.email)
         }
+
     }
 }
 

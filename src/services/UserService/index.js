@@ -82,8 +82,33 @@ const sendResetPasswordLink = async (email) => {
     return false
 }
 
+/**
+ * Update profile
+ * @param user
+ * @param lastName
+ * @param firstName
+ * @param email
+ * @returns {Promise<null|*>}
+ */
+const updateProfile = async (user, lastName,firstName,email) => {
+    try {
+        let userUpdate = await User.findOne({_id:user._id})
+        if(userUpdate) {
+            userUpdate.lastName = lastName
+            userUpdate.firstName = firstName
+            userUpdate.email = email
+            await userUpdate.save()
+            return userUpdate
+        }
+    } catch (err) {
+        logger.error(err.stack)
+    }
+    return null
+}
+
 export default {
     login,
     logout,
-    sendResetPasswordLink
+    sendResetPasswordLink,
+    updateProfile
 }
