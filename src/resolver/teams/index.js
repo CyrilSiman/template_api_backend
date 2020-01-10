@@ -18,6 +18,12 @@ const resolvers = {
             }
             return await TeamsService.createTeam(args.name)
         },
+        deleteTeams: async (parent,args,context) => {
+            if (!context.user || !context.user.isAdmin) {
+                throw new AuthenticationError('Not authenticated')
+            }
+            return await TeamsService.deleteTeams(args.teamsId)
+        },
     }
 }
 

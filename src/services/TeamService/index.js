@@ -17,6 +17,16 @@ const createTeam = async (name) => {
     }
 }
 
+const deleteTeams = async (teamsId) => {
+    try {
+        await Teams.deleteMany({_id: { $in:teamsId}})
+        return teamsId
+    } catch(err) {
+        throw new ApolloError('Unknown error')
+    }
+}
+
 export default {
     createTeam,
+    deleteTeams,
 }

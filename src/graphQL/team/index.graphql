@@ -18,4 +18,6 @@ extend type Query {
 extend type Mutation {
     "Create team"
     createTeam(name:String!): Team
+    "Delete teams"
+    deleteTeams(teamsId:[String]!):[String]
 }
