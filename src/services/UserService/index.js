@@ -6,6 +6,7 @@ import logger from 'ROOT/services/logger'
 import bcrypt from 'bcrypt'
 import { RateLimiterMemory } from 'rate-limiter-flexible'
 import { ApolloError } from 'apollo-server'
+import MailerService from 'ROOT/services/MailService'
 
 const maxConsecutiveFailsByUsername = process.env.MAX_CONSECUTIVE_FAILES_BY_EMAIL
 
@@ -73,8 +74,24 @@ const sendResetPasswordLink = async (email) => {
     try {
         let user = await User.findOne({ email })
         if (user) {
-            user.resetPasswordToken = generateRandomString()
+            const resetToken = generateRandomString()
+            user.resetPasswordToken = resetToken
             await user.save()
+
+            let userName = ''
+            if(user.firstName) {
+                userName = user.firstName
+            } else {
+                userName = user.lastName
+            }
+
+            const resetLink =  process.env.LINK_ADMIN_RESET_PASSWORD.replace('{{token}}',resetToken)
+
+            await MailerService.sendTemplateEmail(MailerService.TEMPLATE.RESET_PASSWORD,email,{
+                resetLink,
+                name:userName
+            })
+            //sendResetPasswordEmail(email,userName,resetLink)
         }
     } catch (err) {
         logger.error(err.stack)

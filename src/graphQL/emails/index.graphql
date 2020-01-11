@@ -1,0 +1,18 @@
+"E-Mail"
+type Email {
+    "UUID"
+    _id:String
+    "sent at"
+    sendAt:Date
+    "sent to"
+    sendTo:String
+    "Template used"
+    template:String
+    "Status"
+    status:String
+}
+
+extend type Query {
+    "Return all emails"
+    emails: [Email]
+}

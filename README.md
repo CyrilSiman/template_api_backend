@@ -14,11 +14,11 @@ This template is one of three part :
 
 ### UI, network..
 
-- Apollo Server
-- Express
-- Mongoose
-- Passport
-- Winston 
+- Express - _http server_
+- Apollo Server - graphQL
+- Mongoose - ODM 
+- Passport - Auth, JWT ...
+- Winston - Logger
 
 ### Packaging, Linter, utils
 
@@ -27,3 +27,6 @@ This template is one of three part :
 - Eslint
 - Dotenv
  
+### Services
+
+- MailJet - mailer

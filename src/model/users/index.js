@@ -1,10 +1,21 @@
 import mongoose from 'mongoose'
 
 var userSchema = new mongoose.Schema({
-    email: String,
+    email: {
+        type:String,
+        required: true,
+        lowercase: true,
+        trim: true
+    },
     password:String,
-    firstName: String,
-    lastName: String,
+    firstName: {
+        type:String,
+        trim: true
+    },
+    lastName: {
+        type:String,
+        trim: true
+    },
     isAdmin: {
         type:Boolean,
         default:false,
