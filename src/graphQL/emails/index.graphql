@@ -7,9 +7,16 @@ type Email {
     "sent to"
     sendTo:String
     "Template used"
-    template:String
+    template:TemplateEmail
     "Status"
     status:String
+}
+
+type TemplateEmail {
+    "Id "
+    id:String
+    "name"
+    name:String
 }
 
 extend type Query {
