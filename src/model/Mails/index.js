@@ -17,7 +17,7 @@ var mailSchema = new mongoose.Schema({
     },
     status : String,
     variables : Object,
-    mailUUID : String
+    messageId : String
 },{
     collection:'mails',
 })

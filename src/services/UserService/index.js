@@ -71,33 +71,36 @@ const login = async (email, password, context) => {
 }
 
 const sendResetPasswordLink = async (email) => {
-    try {
+
         let user = await User.findOne({ email })
+
         if (user) {
-            const resetToken = generateRandomString()
-            user.resetPasswordToken = resetToken
-            await user.save()
 
-            let userName = ''
-            if(user.firstName) {
-                userName = user.firstName
-            } else {
-                userName = user.lastName
+            try {
+                const resetToken = generateRandomString()
+                user.resetPasswordToken = resetToken
+                await user.save()
+
+                let userName = ''
+                if(user.firstName) {
+                    userName = user.firstName
+                } else {
+                    userName = user.lastName
+                }
+
+                const resetLink =  process.env.LINK_ADMIN_RESET_PASSWORD.replace('{{token}}',resetToken)
+
+                await MailerService.sendTemplateEmail(MailerService.TEMPLATE.RESET_PASSWORD,email,{
+                    resetLink,
+                    name:userName
+                })
+                return true
+            } catch (err) {
+                logger.error(err.stack)
             }
-
-            const resetLink =  process.env.LINK_ADMIN_RESET_PASSWORD.replace('{{token}}',resetToken)
-
-            await MailerService.sendTemplateEmail(MailerService.TEMPLATE.RESET_PASSWORD,email,{
-                resetLink,
-                name:userName
-            })
-            //sendResetPasswordEmail(email,userName,resetLink)
         }
-    } catch (err) {
-        logger.error(err.stack)
-    }
 
-    return false
+        throw new ApolloError('User doesn\'t match', constants.ERROR_CODE_USER_DONT_MATCH)
 }
 
 /**

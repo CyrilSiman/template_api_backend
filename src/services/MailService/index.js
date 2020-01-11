@@ -1,8 +1,15 @@
-//import mailjetClient from 'node-mailjet'
+import mailjetClient from 'node-mailjet'
 import Mails from 'ROOT/model/Mails'
+import logger from 'ROOT/services/logger'
+import _ from 'lodash'
 
 const TEMPLATE = {
     RESET_PASSWORD : {id: 1173246, name:'ResetPasswordToken'}
+}
+
+const MAIL_STATUS = {
+    SUCCESS : 'success',
+    FAILED : 'failed'
 }
 
 /**
@@ -21,20 +28,17 @@ const getEmails = async () => {
  * @returns {Promise<void>}
  */
 const sendTemplateEmail = async (template,toEmail,variables) => {
-    //const mailer = mailjetClient.connect(process.env.MAILER_API_PUBLIC_KEY, process.env.MAILER_API_PRIVATE_KEY)
+    const mailer = mailjetClient.connect(process.env.MAILER_API_PUBLIC_KEY, process.env.MAILER_API_PRIVATE_KEY)
+
+    const mail =  new Mails({
+        template:template,
+        sentTo:toEmail,
+        sentAt:new Date(),
+        variables:variables
+    })
 
     try {
 
-        const mail =  Mails.create({
-            template:template,
-            sentTo:toEmail,
-            sentAt:new Date(),
-            variables:variables
-        })
-
-        mail.save()
-
-        /*
         const result = await mailer.post('send', {'version': 'v3.1'})
         .request({
             'Messages':[
@@ -53,11 +57,16 @@ const sendTemplateEmail = async (template,toEmail,variables) => {
                 }
             ]
         })
-        console.log(result.body)
-        */
+
+        mail.status = MAIL_STATUS.SUCCESS
+        mail.messageId = _.get(result, 'body.messages[0].To[0].MessageID', null)
+
     } catch (err) {
-        console.log(err.statusCode)
+        logger.error(err)
+        mail.status = MAIL_STATUS.FAILED
     }
+
+    await mail.save()
 }
 /*
 const sendResetPasswordEmail = async (toEmail,name,resetLink) => {

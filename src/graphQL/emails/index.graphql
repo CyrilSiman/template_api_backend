@@ -10,6 +10,8 @@ type Email {
     template:TemplateEmail
     "Status"
     status:String
+    "Message Id used by mailer"
+    messageId:String
 }
 
 type TemplateEmail {
