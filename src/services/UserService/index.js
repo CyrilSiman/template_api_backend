@@ -1,13 +1,14 @@
 import User from 'ROOT/model/user'
-import Token from 'ROOT/model/token'
+import Token, { TOKEN_TYPE } from 'ROOT/model/token'
 import jwt from 'jsonwebtoken'
 import constants from 'ROOT/constants'
-import { clearCookie, generateRandomString, setCookieOrUpdate } from '../utils'
+import { clearCookie, setCookieOrUpdate } from '../utils'
 import logger from 'ROOT/services/logger'
 import bcrypt from 'bcrypt'
 import { RateLimiterMemory } from 'rate-limiter-flexible'
 import { ApolloError } from 'apollo-server'
 import MailerService from 'ROOT/services/MailService'
+import { addHours } from 'date-fns'
 
 const maxConsecutiveFailsByUsername = process.env.MAX_CONSECUTIVE_FAILES_BY_EMAIL
 
@@ -78,10 +79,10 @@ const sendResetPasswordLink = async (email) => {
         if (user) {
 
             try {
-
-                const resetToken = generateRandomString()
-                user.resetPasswordToken = resetToken
-                await user.save()
+                const token = new Token()
+                token.type = TOKEN_TYPE.RESET
+                token.expiredAt = addHours(new Date(),48)
+                token.user = user._id
 
                 let userName = ''
                 if(user.firstName) {
@@ -90,12 +91,14 @@ const sendResetPasswordLink = async (email) => {
                     userName = user.lastName
                 }
 
-                const resetLink =  process.env.LINK_ADMIN_RESET_PASSWORD.replace('{{token}}',resetToken)
+                const resetLink =  process.env.LINK_ADMIN_RESET_PASSWORD.replace('{{token}}',token._id)
 
                 await MailerService.sendTemplateEmail(MailerService.TEMPLATE.RESET_PASSWORD,email,{
                     resetLink,
                     name:userName
                 })
+
+                await token.save()
                 return true
             } catch (err) {
                 logger.error(err.stack)
@@ -148,21 +151,6 @@ const updateMyPassword = async (user, oldPassword, newPassword) => {
 }
 
 /**
- * Check if token is still valid
- * @param tokenRef
- * @return true if token is still valid false othserwise
- */
-const resetPasswordTokenStillValid = async (tokenRef) => {
-    let token = await Token.findOne({ _id: tokenRef })
-
-    let result = false
-    if(token && token.expiredAt < new Date()) {
-        result = true
-    }
-    return result
-}
-
-/**
  * Reset password
  * @param tokenRef
  * @param newPassword
@@ -192,6 +180,5 @@ export default {
     sendResetPasswordLink,
     updateProfile,
     updateMyPassword,
-    resetPassword,
-    resetPasswordTokenStillValid
+    resetPassword
 }

@@ -17,9 +17,6 @@ const resolvers = {
             }
             return await User.find().lean()
         },
-        resetPasswordTokenStillValid: async (parent,args, context) => {
-            return UserService.resetPasswordTokenStillValid(context.token)
-        },
     },
     Mutation: {
         login : async (parent, args,context) => {

@@ -11,4 +11,6 @@ type Token {
 extend type Query {
     "Return all token"
     tokens: [Token]
+    "Check if the reset password token is still valid"
+    resetPasswordTokenStillValid(token:String!): Boolean
 }

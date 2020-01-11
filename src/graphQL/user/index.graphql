@@ -24,8 +24,6 @@ extend type Query {
     users: [User]
     "Return user connected information's"
     me: User
-    "Check if the reset password token is still valid"
-    resetPasswordTokenStillValid(token:String!): Boolean
 }
 
 extend type Mutation {

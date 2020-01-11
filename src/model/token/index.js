@@ -1,8 +1,13 @@
 import mongoose from 'mongoose'
 
+export const TOKEN_TYPE = {
+    RESET: 'RESET',
+    CREATE: 'CREATE'
+}
+
 var tokenSchema = new mongoose.Schema({
     type: String,
-    expired:Date,
+    expiredAt:Date,
     user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
