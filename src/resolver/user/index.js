@@ -49,8 +49,8 @@ const resolvers = {
             }
             return await UserService.updateMyPassword(context.user,args.oldPassword,args.newPassword)
         },
-        resetPassword: async (parent,args, context) => {
-            return await UserService.resetPassword(context.token,args.newPassword)
+        resetPassword: async (parent,args) => {
+            return await UserService.resetPassword(args.token,args.newPassword)
         },
     }
 }

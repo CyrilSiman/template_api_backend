@@ -50,6 +50,9 @@ const login = async (email, password, context) => {
             //Reset consecutive fails
             await limiterConsecutiveFailsByUsername.delete(email)
 
+            //Remove all reset token if user can login
+            await Token.deleteMany({user:user._id, type:TOKEN_TYPE.RESET})
+
             result.authenticated = true
         } else {
             //Clean previous cookie
@@ -154,22 +157,28 @@ const updateMyPassword = async (user, oldPassword, newPassword) => {
  * Reset password
  * @param tokenRef
  * @param newPassword
- * @return {Promise<void>}
+ * @return boolean true if password reset false otherwise.
  */
 const resetPassword = async (tokenRef, newPassword) => {
     let token = await Token.findOne({ _id: tokenRef })
 
-    if(token && token.user && token.expireAt < new Date()) {
+    if(token && token.user && new Date(token.expiredAt) > new Date()) {
         let userUpdate = await User.findOne({ _id: token.user })
         if (userUpdate) {
             userUpdate.password = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT_ROUNDS))
-            userUpdate.save()
+            await userUpdate.save()
+
+            //Reset limiter
+            await limiterConsecutiveFailsByUsername.delete(userUpdate.email)
+            //Reset all token.
+            await Token.deleteMany({user:token.user, type:TOKEN_TYPE.RESET})
+
             return true
         } else {
-            throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_TOKEN_EXPIRED)
+            throw new ApolloError('Reset canceled', constants.ERROR_CODE_TOKEN_EXPIRED)
         }
     } else {
-        throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_TOKEN_NOT_RECOGNIZED)
+        throw new ApolloError('Reset canceled', constants.ERROR_CODE_TOKEN_NOT_RECOGNIZED)
     }
 }
 
