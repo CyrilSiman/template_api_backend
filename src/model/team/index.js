@@ -9,10 +9,10 @@ var teamSchema = new mongoose.Schema({
         trim: true
     },
 },{
-    collection:'teams',
+    collection:'team',
     timestamps:true
 })
 
-const Teams = mongoose.model('teams', teamSchema)
+const Teams = mongoose.model('team', teamSchema)
 
 export default Teams

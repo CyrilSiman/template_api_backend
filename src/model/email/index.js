@@ -19,9 +19,9 @@ var mailSchema = new mongoose.Schema({
     variables : Object,
     messageId : String
 },{
-    collection:'mails',
+    collection:'mail',
 })
 
-const Mails = mongoose.model('mails', mailSchema)
+const Mails = mongoose.model('mail', mailSchema)
 
 export default Mails

@@ -78,6 +78,7 @@ const sendResetPasswordLink = async (email) => {
         if (user) {
 
             try {
+
                 const resetToken = generateRandomString()
                 user.resetPasswordToken = resetToken
                 await user.save()
@@ -170,22 +171,18 @@ const resetPasswordTokenStillValid = async (tokenRef) => {
 const resetPassword = async (tokenRef, newPassword) => {
     let token = await Token.findOne({ _id: tokenRef })
 
-    if(token) {
-        throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_TOKEN_EXPIRED)
-        //if(Token valid)
-        /*
-        let userUpdate = await User.findOne({ _id: user._id })
+    if(token && token.user && token.expireAt < new Date()) {
+        let userUpdate = await User.findOne({ _id: token.user })
         if (userUpdate) {
             userUpdate.password = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT_ROUNDS))
             userUpdate.save()
             return true
         } else {
-            throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_PASSWORD_DONT_MATCH)
-        }*/
+            throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_TOKEN_EXPIRED)
+        }
     } else {
         throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_TOKEN_NOT_RECOGNIZED)
     }
-
 }
 
 

@@ -4,6 +4,7 @@ var userSchema = new mongoose.Schema({
     email: {
         type:String,
         required: true,
+        unique:true,
         lowercase: true,
         trim: true
     },
@@ -21,9 +22,9 @@ var userSchema = new mongoose.Schema({
         default:false,
     },
 },{
-    collection:'users'
+    collection:'user'
 })
 
-const Users = mongoose.model('users', userSchema)
+const User = mongoose.model('user', userSchema)
 
-export default Users
+export default User
