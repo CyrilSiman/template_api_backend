@@ -27,6 +27,7 @@ const createRootUser = async (secret,email, password) => {
             })
             await user.save()
             config.enabled = true
+            config.secret = null
             await config.save()
             return true
         }
