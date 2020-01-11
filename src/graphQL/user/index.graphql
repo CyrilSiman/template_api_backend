@@ -11,19 +11,21 @@ type User {
 }
 
 type LoginAnswer {
-    "True if users is authenticated false otherwise "
+    "True if user is authenticated false otherwise "
     authenticated:Boolean
-    "Try left before users will be blocked"
+    "Try left before user will be blocked"
     tryLeft:Int
-    "How many time users need to wait before next authentication try"
+    "How many time user need to wait before next authentication try"
     retryAfter:Int
 }
 
 extend type Query {
-    "Return all users"
+    "Return all user"
     users: [User]
-    "Return users connected information's"
+    "Return user connected information's"
     me: User
+    "Check if the reset password token is still valid"
+    resetPasswordTokenStillValid(token:String!): Boolean
 }
 
 extend type Mutation {
@@ -33,8 +35,10 @@ extend type Mutation {
     logout : Boolean
     "Send reset Password Link"
     sendResetPasswordLink(email:String!): Boolean
-    "Update connected users profile"
+    "Update connected user profile"
     updateMyProfile(lastName:String!,firstName:String!,email:String!): User
-    "Update connected users password"
+    "Update connected user password"
     updateMyPassword(oldPassword:String!,newPassword:String!): Boolean
+    "Reset password with temporary token"
+    resetPassword(token:String!,newPassword:String!): Boolean
 }

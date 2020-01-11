@@ -1,8 +1,8 @@
 import appConfig from './appConfig/index.graphql'
-import emails from './emails/index.graphql'
-import users from './users/index.graphql'
-import teams from './teams/index.graphql'
-import tokens from './tokens/index.graphql'
+import email from './email/index.graphql'
+import user from './user/index.graphql'
+import team from './team/index.graphql'
+import token from './token/index.graphql'
 
 import { AuthenticationError, gql } from 'apollo-server'
 
@@ -23,10 +23,10 @@ const root = gql`
 
 export const typeDefs = [root,
     appConfig,
-    emails,
-    teams,
-    tokens,
-    users
+    email,
+    team,
+    token,
+    user
 ]
 
 class IsAuthenticatedDirective extends SchemaDirectiveVisitor {

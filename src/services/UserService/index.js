@@ -1,4 +1,5 @@
-import User from 'ROOT/model/users'
+import User from 'ROOT/model/user'
+import Token from 'ROOT/model/token'
 import jwt from 'jsonwebtoken'
 import constants from 'ROOT/constants'
 import { clearCookie, generateRandomString, setCookieOrUpdate } from '../utils'
@@ -128,7 +129,7 @@ const updateProfile = async (user, lastName, firstName, email) => {
 }
 
 /**
- * Update password of connected users
+ * Update password of connected user
  * @param user
  * @param oldPassword
  * @param newPassword
@@ -145,11 +146,55 @@ const updateMyPassword = async (user, oldPassword, newPassword) => {
     }
 }
 
+/**
+ * Check if token is still valid
+ * @param tokenRef
+ * @return true if token is still valid false othserwise
+ */
+const resetPasswordTokenStillValid = async (tokenRef) => {
+    let token = await Token.findOne({ _id: tokenRef })
+
+    let result = false
+    if(token && token.expiredAt < new Date()) {
+        result = true
+    }
+    return result
+}
+
+/**
+ * Reset password
+ * @param tokenRef
+ * @param newPassword
+ * @return {Promise<void>}
+ */
+const resetPassword = async (tokenRef, newPassword) => {
+    let token = await Token.findOne({ _id: tokenRef })
+
+    if(token) {
+        throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_TOKEN_EXPIRED)
+        //if(Token valid)
+        /*
+        let userUpdate = await User.findOne({ _id: user._id })
+        if (userUpdate) {
+            userUpdate.password = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT_ROUNDS))
+            userUpdate.save()
+            return true
+        } else {
+            throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_PASSWORD_DONT_MATCH)
+        }*/
+    } else {
+        throw new ApolloError('Password doesn\'t match', constants.ERROR_CODE_TOKEN_NOT_RECOGNIZED)
+    }
+
+}
+
+
 export default {
     login,
     logout,
     sendResetPasswordLink,
     updateProfile,
-    updateMyPassword
-
+    updateMyPassword,
+    resetPassword,
+    resetPasswordTokenStillValid
 }

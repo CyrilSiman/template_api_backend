@@ -1,6 +1,6 @@
 import AppConfig from 'ROOT/model/appConfig'
 import {generateRandomString} from '../utils'
-import Users from 'ROOT/model/users'
+import Users from 'ROOT/model/user'
 import bcrypt from 'bcrypt'
 import logger from 'ROOT/services/logger'
 
@@ -50,7 +50,7 @@ export const checkIfAppIsConfigured = async () => {
         appConfig.secret = secret
         await appConfig.save()
 
-        console.log('Your backend isn\'t configure yet, use this temporary secret to enable it, and create admin users')
+        console.log('Your backend isn\'t configure yet, use this temporary secret to enable it, and create admin user')
         console.log(`your secret ->: ${secret}`)
     }
 }

@@ -1,10 +1,10 @@
 import _ from 'lodash'
 
 import utils from './utils'
-import emails from './emails'
-import teams from './teams'
-import tokens from './tokens'
-import users from './users'
+import emails from './email'
+import teams from './team'
+import tokens from './token'
+import users from './user'
 
 import appConfig from './appConfig'
 

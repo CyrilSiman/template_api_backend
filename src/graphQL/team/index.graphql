@@ -11,13 +11,13 @@ type Team {
 }
 
 extend type Query {
-    "Return all teams"
+    "Return all team"
     teams: [Team]
 }
 
 extend type Mutation {
-    "Create teams"
+    "Create team"
     createTeam(name:String!): Team
-    "Delete teams"
+    "Delete team"
     deleteTeams(teamsId:[String]!):[String]
 }

@@ -1,4 +1,4 @@
-import Teams from 'ROOT/model/teams'
+import Teams from 'ROOT/model/team'
 import {ApolloError} from 'apollo-server'
 import constants from 'ROOT/constants'
 import logger from 'ROOT/services/logger'

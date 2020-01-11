@@ -1,4 +1,4 @@
-import Tokens from 'ROOT/model/tokens'
+import Tokens from 'ROOT/model/token'
 import {ApolloError} from 'apollo-server'
 
 const getAll = async () => {

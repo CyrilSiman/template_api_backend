@@ -9,6 +9,6 @@ type Token {
 }
 
 extend type Query {
-    "Return all tokens"
+    "Return all token"
     tokens: [Token]
 }

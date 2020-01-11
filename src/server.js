@@ -13,7 +13,7 @@ import {DEV_ENVIRONEMENT, COOKIE_NAME} from './constants'
 import resolvers from './resolver'
 import {typeDefs , schemaDirectives} from './graphQL'
 import mongoose from 'mongoose'
-import Users from 'ROOT/model/users'
+import Users from 'ROOT/model/user'
 import { setCookieOrUpdate } from 'ROOT/services/utils'
 
 const { DISABLE_CORS,

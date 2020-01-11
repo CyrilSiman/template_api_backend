@@ -22,6 +22,6 @@ type TemplateEmail {
 }
 
 extend type Query {
-    "Return all emails"
+    "Return all email"
     emails: [Email]
 }

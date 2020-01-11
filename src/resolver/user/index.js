@@ -1,4 +1,4 @@
-import User from 'ROOT/model/users'
+import User from 'ROOT/model/user'
 import UserService from 'ROOT/services/UserService'
 import logger from 'ROOT/services/logger'
 import {AuthenticationError} from 'apollo-server'
@@ -16,6 +16,9 @@ const resolvers = {
                 throw new AuthenticationError('Not authenticated')
             }
             return await User.find().lean()
+        },
+        resetPasswordTokenStillValid: async (parent,args, context) => {
+            return UserService.resetPasswordTokenStillValid(context.token)
         },
     },
     Mutation: {
@@ -48,7 +51,10 @@ const resolvers = {
                 throw new AuthenticationError('Not authenticated')
             }
             return await UserService.updateMyPassword(context.user,args.oldPassword,args.newPassword)
-        }
+        },
+        resetPassword: async (parent,args, context) => {
+            return await UserService.resetPassword(context.token,args.newPassword)
+        },
     }
 }
 

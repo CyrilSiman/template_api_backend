@@ -1,5 +1,5 @@
 import mailjetClient from 'node-mailjet'
-import Mails from 'ROOT/model/emails'
+import Mails from 'ROOT/model/email'
 import logger from 'ROOT/services/logger'
 import _ from 'lodash'
 
