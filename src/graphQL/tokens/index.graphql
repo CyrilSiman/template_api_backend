@@ -1,0 +1,14 @@
+"Token used in application for creation and reset password"
+type Token {
+    "UUID"
+    _id:String
+    "Token type"
+    type:String
+    "Token's expiration date"
+    expiredAt:Date
+}
+
+extend type Query {
+    "Return all tokens"
+    tokens: [Token]
+}

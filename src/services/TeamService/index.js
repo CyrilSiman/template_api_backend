@@ -26,7 +26,17 @@ const deleteTeams = async (teamsId) => {
     }
 }
 
+const getAll = async () => {
+    try {
+        return await Teams.find().lean()
+    } catch(err) {
+        throw new ApolloError('Unknown error')
+    }
+}
+
+
 export default {
+    getAll,
     createTeam,
     deleteTeams,
 }

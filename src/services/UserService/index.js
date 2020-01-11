@@ -128,7 +128,7 @@ const updateProfile = async (user, lastName, firstName, email) => {
 }
 
 /**
- * Update password of connected user
+ * Update password of connected users
  * @param user
  * @param oldPassword
  * @param newPassword

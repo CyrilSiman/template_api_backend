@@ -1,4 +1,3 @@
-import Teams from 'ROOT/model/teams'
 import TeamsService from 'ROOT/services/TeamService'
 import {AuthenticationError} from 'apollo-server'
 
@@ -8,7 +7,7 @@ const resolvers = {
             if (!context.user) {
                 throw new AuthenticationError('Not authenticated')
             }
-            return await Teams.find().lean()
+            return await TeamsService.getAll()
         },
     },
     Mutation: {

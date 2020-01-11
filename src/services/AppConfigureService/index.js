@@ -50,7 +50,7 @@ export const checkIfAppIsConfigured = async () => {
         appConfig.secret = secret
         await appConfig.save()
 
-        console.log('Your backend isn\'t configure yet, use this temporary secret to enable it, and create admin user')
+        console.log('Your backend isn\'t configure yet, use this temporary secret to enable it, and create admin users')
         console.log(`your secret ->: ${secret}`)
     }
 }
