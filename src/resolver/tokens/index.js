@@ -1,4 +1,4 @@
-import Tokens from 'ROOT/model/tokens'
+import TokensService from 'ROOT/services/TokenService'
 import {AuthenticationError} from 'apollo-server'
 
 const resolvers = {
@@ -7,7 +7,7 @@ const resolvers = {
             if (!context.user) {
                 throw new AuthenticationError('Not authenticated')
             }
-            return await Teams.find().lean()
+            return await TokensService.getAll()
         },
     },
 }
