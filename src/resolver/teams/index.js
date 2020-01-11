@@ -3,10 +3,8 @@ import {AuthenticationError} from 'apollo-server'
 
 const resolvers = {
     Query: {
-        teams: async (parent,args,context) => {
-            if (!context.user) {
-                throw new AuthenticationError('Not authenticated')
-            }
+        teams: async () => {
+            console.log('ici')
             return await TeamsService.getAll()
         },
     },

@@ -11,7 +11,7 @@ import {checkIfAppIsConfigured} from 'ROOT/services/AppConfigureService'
 
 import {DEV_ENVIRONEMENT, COOKIE_NAME} from './constants'
 import resolvers from './resolver'
-import typeDefs from './graphQL'
+import {typeDefs , schemaDirectives} from './graphQL'
 import mongoose from 'mongoose'
 import Users from 'ROOT/model/users'
 import { setCookieOrUpdate } from 'ROOT/services/utils'
@@ -88,6 +88,7 @@ const runServer = async () => {
 
     const apolloServer = new ApolloServer({
         typeDefs,
+        schemaDirectives,
         resolvers,
         debug: false,
         validationRules: [ depthLimit(10) ],
