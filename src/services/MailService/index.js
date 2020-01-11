@@ -10,7 +10,7 @@ const TEMPLATE = {
  * @returns {Promise<*>}
  */
 const getEmails = async () => {
-    return Mails.find()
+    return await Mails.find().sort({sentAt:-1}).limit(200)
 }
 
 /**
@@ -27,8 +27,8 @@ const sendTemplateEmail = async (template,toEmail,variables) => {
 
         const mail =  Mails.create({
             template:template,
-            sendTo:toEmail,
-            sendAt:new Date(),
+            sentTo:toEmail,
+            sentAt:new Date(),
             variables:variables
         })
 

@@ -3,9 +3,9 @@ type Email {
     "UUID"
     _id:String
     "sent at"
-    sendAt:Date
+    sentAt:Date
     "sent to"
-    sendTo:String
+    sentTo:String
     "Template used"
     template:TemplateEmail
     "Status"

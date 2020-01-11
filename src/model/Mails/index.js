@@ -1,13 +1,13 @@
 import mongoose from 'mongoose'
 
 var mailSchema = new mongoose.Schema({
-    sendTo: {
+    sentTo: {
         type:String,
         required : true,
         lowercase: true,
         trim: true
     },
-    sendAt: {
+    sentAt: {
         type:Date,
         required:true
     },
