@@ -8,6 +8,8 @@ type User {
     lastName:String
     "User email used as login"
     email:String
+    "Is Admin"
+    isAdmin:Boolean
 }
 
 type LoginAnswer {
